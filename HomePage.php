@@ -38,13 +38,16 @@ if (isset($_POST) && !empty($_POST)) {
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="project1.css">
+  <link rel="stylesheet" href="projectpage.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
+
+<?php 
+?>
   <nav class="navbar navbar-expand-lg navbar-light bg-danger">
     <a class="navbar-brand" href="http://localhost/phpMiniProject/HomePage.php"><img src="Capture.PNG" alt="logo"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
@@ -86,7 +89,7 @@ if (isset($_POST) && !empty($_POST)) {
 
       <input type="file" name="product_image"><br><br>
 
-      <input type="submit"><br>
+      <input id="submit" type="submit"><br>
     </form>
   </div>
   <table>
@@ -96,6 +99,7 @@ if (isset($_POST) && !empty($_POST)) {
       <th>price of Product</th>
       <th>Description of Product</th>
       <th>Date of Product</th>
+      <th>Delete Product</th>
 
     </thead>
     <tbody>
@@ -144,8 +148,22 @@ if (isset($_POST) && !empty($_POST)) {
             <?php echo !empty($_SESSION["data"][$i]['date']) ? htmlspecialchars($_SESSION["data"][$i]['date']) ?? '' : '' ?>
           </td>
           <td>
-
-          </td>
+          <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <input type="hidden" name="delete_index" value="<?php echo $i; ?>">
+            <button type="submit" name="delete_button" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+          <?php 
+          if (isset($_POST['delete_button'])) {
+            $delete_index = $_POST['delete_index'];
+            if (isset($_SESSION["data"][$delete_index])) {
+              unset($_SESSION["data"][$delete_index]);
+              // Re-index the session data array after deletion
+              $_SESSION["data"] = array_values($_SESSION["data"]);
+            }
+          }
+          
+          ?>
+        </td>
         </tr>
 
         <?php
@@ -240,6 +258,5 @@ if (isset($_POST) && !empty($_POST)) {
 </body>
 
 </html>
-
 
 
